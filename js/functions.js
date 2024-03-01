@@ -28,3 +28,40 @@ let checkPalindrom = function (checkString) {
 };
 
 console.log(checkPalindrom("топот"));
+
+//Задача № 4
+/*
+startDayTime - начало рабочего дня
+endDayTime - конец рабочего дня
+startMeetingTime - начало встречи
+meetingTime - продолжительность встречи в минутах
+*/
+
+// разделяем на 2 числа в массиве и превращаем в минуты
+const checkMeetingTime = (
+  startDayTime,
+  endDayTime,
+  startMeetingTime,
+  meetingTime
+) => {
+  const startDayTimeSplit = startDayTime.split(":");
+  const endDayTimeSplit = endDayTime.split(":");
+  const startMeetingTimeSplit = startMeetingTime.split(":");
+
+  const startDayTimeMin =
+    Number(startDayTimeSplit[0]) * 60 + Number(startDayTimeSplit[1]);
+  const endDayTimeMin =
+    Number(endDayTimeSplit[0]) * 60 + Number(endDayTimeSplit[1]);
+  const startMeetingTimeMin =
+    Number(startMeetingTimeSplit[0]) * 60 + Number(startMeetingTimeSplit[1]);
+
+  return (
+    startMeetingTimeMin >= startDayTimeMin &&
+    startMeetingTimeMin + meetingTime <= endDayTimeMin
+  );
+};
+
+console.log(
+  "checkMeetingTime",
+  checkMeetingTime("08:00", "17:30", "16:00", 90)
+);
