@@ -1,12 +1,12 @@
 //модуль, который создает данные
 
-import { names, messages } from "./constants.js";
+import { NAMES, MESSAGES } from "./constants.js";
 import { getRandomInteger, getRandomArrayElement } from "./utils.js";
 
 const createArray = () => {
-  const Arr = [];
+  const Array = [];
   for (let i = 1; i <= 25; i++) {
-    const obj = {
+    const user = {
       id: i,
       url: `photos/${i}.jpg`,
       description: "desc",
@@ -19,17 +19,17 @@ const createArray = () => {
       const comment = {
         id: getRandomInteger(0, 1000),
         avatar: `img/avatar-${getRandomInteger(1, 6)}.svg`,
-        message: getRandomArrayElement(messages),
-        name: getRandomArrayElement(names),
+        message: getRandomArrayElement(MESSAGES),
+        name: getRandomArrayElement(NAMES),
       };
       comments.push(comment);
     }
 
-    obj.comments = comments;
+    user.comments = comments;
 
-    Arr.push(obj);
+    Array.push(user);
   }
-  return Arr;
+  return Array;
 };
 
 export { createArray };
