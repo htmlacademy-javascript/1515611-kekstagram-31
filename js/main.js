@@ -1,3 +1,3 @@
 import { createArray } from "./data.js";
-
-console.log(createArray());
+import { fillPhotos } from "./users.js";
+fillPhotos();
