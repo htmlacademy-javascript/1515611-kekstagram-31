@@ -10,30 +10,28 @@
 // Количество комментариев comments выведите в блок .picture__comments.
 // Отрисуйте сгенерированные DOM-элементы в блок .pictures. Для вставки элементов используйте DocumentFragment.
 
-// Подключите модуль в проект.
+const pictures = document.querySelector(".pictures");
+const cardTemplate = document
+  .querySelector("#picture")
+  .content.querySelector(".picture");
 
-import { createArray } from "./data.js";
-const fillPhotos = function () {
+const renderPhotos = function (data) {
   //В users записываем массив пользователей
-  const users = createArray();
+  // const users = createArray();
 
   //Секция, в которую мы вставляем сгенерированные данные
-  const pictures = document.querySelector(".pictures");
-  const userTemplate = document
-    .querySelector("#picture")
-    .content.querySelector(".picture");
 
-  const usersListFragment = document.createDocumentFragment();
-  users.forEach((user) => {
-    const userElement = userTemplate.cloneNode(true);
-    userElement.querySelector(".picture__img").src = user.url;
-    userElement.querySelector(".picture__img").alt = user.description;
-    userElement.querySelector(".picture__comments").textContent =
-      user.comments.length;
-    userElement.querySelector(".picture__likes").textContent = user.likes;
-    usersListFragment.appendChild(userElement);
+  const cardListFragment = document.createDocumentFragment();
+  data.forEach(({ url, description, comments, likes }) => {
+    const cardElement = cardTemplate.cloneNode(true);
+    cardElement.querySelector(".picture__img").src = url;
+    cardElement.querySelector(".picture__img").alt = description;
+    cardElement.querySelector(".picture__comments").textContent =
+      comments.length;
+    cardElement.querySelector(".picture__likes").textContent = likes;
+    cardListFragment.appendChild(cardElement);
   });
-  pictures.appendChild(usersListFragment);
+  pictures.appendChild(cardListFragment);
 };
 
-export { fillPhotos };
+export { renderPhotos };
