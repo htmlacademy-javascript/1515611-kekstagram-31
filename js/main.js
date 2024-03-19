@@ -1,7 +1,5 @@
 import { createArray } from "./data.js";
-import { renderPhotos } from "./users.js";
+import { renderPhotos } from "./thumbnails.js";
 
 const photos = createArray();
-console.log(photos);
-
 renderPhotos(photos);
