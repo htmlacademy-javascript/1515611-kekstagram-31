@@ -1,3 +1,5 @@
 import { createArray } from "./data.js";
-import { fillPhotos } from "./users.js";
-fillPhotos();
+import { renderPhotos } from "./thumbnails.js";
+
+const photos = createArray();
+renderPhotos(photos);

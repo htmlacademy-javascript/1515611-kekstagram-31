@@ -9,7 +9,7 @@ const createArray = () => {
     const user = {
       id: i,
       url: `photos/${i}.jpg`,
-      description: "desc",
+      description: "Тестим новую камеру!",
       likes: getRandomInteger(15, 200),
     };
 
@@ -29,7 +29,7 @@ const createArray = () => {
 
     Array.push(user);
   }
-  return Array;
+  return Array; //функция возвращает объект user со свойствами: id, url, description, likes
 };
 
 export { createArray };
