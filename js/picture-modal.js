@@ -29,6 +29,20 @@ const openModal = (url, description, comments, likes) => {
     .classList.add("hidden");
   userModalElement.querySelector(".comments-loader").classList.add("hidden");
 
+  //Разбиение комментов
+  const commentsParts = [];
+  const commentPartsCount = Math.ceil(comments.length / 5);
+  for (let i = 0; i < commentPartsCount; i++) {
+    const array = [];
+    for (let j = 0; j < 5; j++) {
+      const element = comments[i + j];
+      if (element) {
+        array.push(element);
+      }
+    }
+    commentsParts.push(array);
+  }
+
   //Генерация комментов
   comments.forEach((comment) => {
     // функция будет вызываться от 0 до 30 раз, то есть столько, сколько комментов в массиве comments
@@ -41,10 +55,10 @@ const openModal = (url, description, comments, likes) => {
 
   //Выключение скролла
   document.querySelector("body").classList.add("modal-open");
-
   document.addEventListener("keydown", onDocumentKeydown);
 };
 
+//Закрытие модалки
 const closeModal = () => {
   userModalElement.classList.add("hidden");
   document.querySelector("body").classList.remove("modal-open");
