@@ -28,6 +28,7 @@ const createArray = () => {
     user.comments = comments;
 
     Array.push(user);
+    console.log(createArray.comments);
   }
   return Array; //функция возвращает объект user со свойствами: id, url, description, likes
 };

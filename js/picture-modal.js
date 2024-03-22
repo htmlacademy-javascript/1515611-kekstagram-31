@@ -15,8 +15,33 @@ const onDocumentKeydown = (evt) => {
   }
 };
 
+//Функция отрисовки комментов
+const renderComments = (array) => {
+  array.forEach((comment) => {
+    const commentSection = socialCommentLi.cloneNode(true);
+    commentSection.querySelector(".social__picture").src = comment.avatar;
+    commentSection.querySelector(".social__picture").alt = comment.name;
+    commentSection.querySelector(".social__text").textContent = comment.message;
+    socialComments.appendChild(commentSection);
+  });
+};
+
+let commentsParts = [];
+let nextCommentsPartIndex = 1;
+//Подгрузка по пять комментов
+const loadNextComments = () => {
+  if (nextCommentsPartIndex < commentsParts.length) {
+    renderComments(commentsParts[nextCommentsPartIndex]);
+    nextCommentsPartIndex += 1;
+  }
+};
+
 //Функция открытия модалки
 const openModal = (url, description, comments, likes) => {
+  //Очистка комментариев от предыдущей миниатюры
+  commentsParts = [];
+  nextCommentsPartIndex = 1;
+
   userModalElement.classList.remove("hidden");
   userModalElement.querySelector(".big-picture__img img").src = url;
   userModalElement.querySelector(".social__comment-total-count").textContent =
@@ -27,31 +52,17 @@ const openModal = (url, description, comments, likes) => {
   userModalElement
     .querySelector(".social__comment-count")
     .classList.add("hidden");
-  userModalElement.querySelector(".comments-loader").classList.add("hidden");
 
-  //Разбиение комментов
-  const commentsParts = [];
-  const commentPartsCount = Math.ceil(comments.length / 5);
-  for (let i = 0; i < commentPartsCount; i++) {
-    const array = [];
-    for (let j = 0; j < 5; j++) {
-      const element = comments[i + j];
-      if (element) {
-        array.push(element);
-      }
+  if (comments.length > 0) {
+    //Разбиение комментов по 5
+    const commentPartsCount = Math.ceil(comments.length / 5);
+    for (let i = 0; i < commentPartsCount; i++) {
+      const array = comments.slice(i * 5, i * 5 + 5);
+      commentsParts.push(array);
     }
-    commentsParts.push(array);
+    //Отрисовка первых 5 комментов
+    renderComments(commentsParts[0]);
   }
-
-  //Генерация комментов
-  comments.forEach((comment) => {
-    // функция будет вызываться от 0 до 30 раз, то есть столько, сколько комментов в массиве comments
-    const commentSection = socialCommentLi.cloneNode(true);
-    commentSection.querySelector(".social__picture").src = comment.avatar;
-    commentSection.querySelector(".social__picture").alt = comment.name;
-    commentSection.querySelector(".social__text").textContent = comment.message;
-    socialComments.appendChild(commentSection);
-  });
 
   //Выключение скролла
   document.querySelector("body").classList.add("modal-open");
@@ -68,5 +79,9 @@ const closeModal = () => {
 userModalCloseElement.addEventListener("click", () => {
   closeModal();
 });
+//Добавление клика на "Загрузить еще"
+userModalElement
+  .querySelector(".comments-loader")
+  .addEventListener("click", loadNextComments);
 
 export { openModal };
