@@ -1,6 +1,6 @@
 //Задача № 1
 
-let checkStringLength = function (charset, length) {
+const checkStringLength = function (charset, length) {
   if (charset.length <= length) {
     return true;
   } else {
@@ -8,19 +8,16 @@ let checkStringLength = function (charset, length) {
   }
 };
 
-console.log(checkStringLength("проверяемая строка", 20));
-
 //Задача № 2
 
-let checkPalindrom = function (checkString) {
-  const resultStr = checkString.replaceAll(" ", "").toLowerCase();
-  let counter = "";
+const checkPalindrom = function (checkString) {
+  const resultStr = checkString.replaceAll(' ', '').toLowerCase();
+  let counter = '';
   for (let i = resultStr.length - 1; i >= 0; i--) {
     counter += resultStr[i];
   }
   return counter === resultStr;
 };
-console.log(checkPalindrom("топот"));
 
 //Задача № 4
 /*
@@ -37,9 +34,9 @@ const checkMeetingTime = (
   startMeetingTime,
   meetingTime
 ) => {
-  const startDayTimeSplit = startDayTime.split(":");
-  const endDayTimeSplit = endDayTime.split(":");
-  const startMeetingTimeSplit = startMeetingTime.split(":");
+  const startDayTimeSplit = startDayTime.split(':');
+  const endDayTimeSplit = endDayTime.split(':');
+  const startMeetingTimeSplit = startMeetingTime.split(':');
 
   const startDayTimeMin =
     Number(startDayTimeSplit[0]) * 60 + Number(startDayTimeSplit[1]);
@@ -53,8 +50,3 @@ const checkMeetingTime = (
     startMeetingTimeMin + meetingTime <= endDayTimeMin
   );
 };
-
-console.log(
-  "checkMeetingTime",
-  checkMeetingTime("08:00", "17:30", "16:00", 90)
-);

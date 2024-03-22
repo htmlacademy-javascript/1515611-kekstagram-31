@@ -1,7 +1,7 @@
 //модуль, который создает данные
 
-import { NAMES, MESSAGES } from "./constants.js";
-import { getRandomInteger, getRandomArrayElement } from "./utils.js";
+import { NAMES, MESSAGES } from './constants.js';
+import { getRandomInteger, getRandomArrayElement } from './utils.js';
 
 const createArray = () => {
   const Array = [];
@@ -9,7 +9,7 @@ const createArray = () => {
     const user = {
       id: i,
       url: `photos/${i}.jpg`,
-      description: "Тестим новую камеру!",
+      description: 'Тестим новую камеру!',
       likes: getRandomInteger(15, 200),
     };
 
@@ -28,7 +28,6 @@ const createArray = () => {
     user.comments = comments;
 
     Array.push(user);
-    console.log(createArray.comments);
   }
   return Array; //функция возвращает объект user со свойствами: id, url, description, likes
 };
