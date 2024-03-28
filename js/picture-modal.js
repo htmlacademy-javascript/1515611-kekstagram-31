@@ -8,6 +8,12 @@ const socialComments = document.querySelector('.social__comments'); //
 const socialCommentLi = socialComments
   .querySelector('.social__comment')
   .cloneNode(true);
+const socialCommentsCount = document.querySelector(
+  '.social__comment-shown-count'
+);
+const socialTotalCount = userModalElement.querySelector(
+  '.social__comment-total-count'
+);
 
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
@@ -36,11 +42,18 @@ const renderComments = (array) => {
 
 let commentsParts = [];
 let nextCommentsPartIndex = 1;
-//Подгрузка по пять комментов
+//Подгрузка по пять комментов и отображение статистики
 const loadNextComments = () => {
   if (nextCommentsPartIndex < commentsParts.length) {
-    renderComments(commentsParts[nextCommentsPartIndex]);
+    const currentComments = commentsParts[nextCommentsPartIndex];
+    renderComments(currentComments);
     nextCommentsPartIndex += 1;
+    let commentsNumber = parseInt(socialCommentsCount.textContent);
+    commentsNumber += currentComments.length;
+    socialCommentsCount.textContent = commentsNumber;
+    if (socialCommentsCount.textContent == socialTotalCount.textContent) {
+      document.querySelector('.comments-loader').classList.add('hidden');
+    }
   }
 };
 
@@ -57,9 +70,6 @@ const openModal = (url, description, comments, likes) => {
   userModalElement.querySelector('.likes-count').textContent = likes;
   userModalElement.querySelector('.social__caption').textContent = description;
   socialComments.innerHTML = '';
-  userModalElement
-    .querySelector('.social__comment-count')
-    .classList.add('hidden');
 
   if (comments.length > 0) {
     //Разбиение комментов по 5
@@ -69,10 +79,17 @@ const openModal = (url, description, comments, likes) => {
       commentsParts.push(array);
     }
     //Отрисовка первых 5 комментов
+    socialCommentsCount.textContent = commentsParts[0].length;
     renderComments(commentsParts[0]);
+
+    if (socialCommentsCount.textContent === socialTotalCount.textContent) {
+      document.querySelector('.comments-loader').classList.add('hidden');
+    } else {
+      document.querySelector('.comments-loader').classList.remove('hidden');
+    }
   }
 
-  //Выключение скролла
+  //Выключение скролла и добавление выключения по Esc
   document.querySelector('body').classList.add('modal-open');
   document.addEventListener('keydown', onDocumentKeydown);
 };
@@ -80,6 +97,7 @@ const openModal = (url, description, comments, likes) => {
 userModalCloseElement.addEventListener('click', () => {
   closeModal();
 });
+
 //Добавление клика на "Загрузить еще"
 userModalElement
   .querySelector('.comments-loader')
