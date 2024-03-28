@@ -1,80 +1,75 @@
 //Модуль, отвечающий за работу с формой
+import { prepareImgUploadPristine } from './validation.js';
+import { isEscapeKey } from './utils.js';
+import './effects.js';
 
+const imgUploadForm = document.querySelector('.img-upload__form');
 const editImage = document.querySelector('.img-upload__overlay');
 const formInput = document.querySelector('.img-upload__input');
 const closeForm = document.querySelector('.img-upload__cancel');
 const startStateInput = document.querySelector('.img-upload__input');
-const effectRadios = document.querySelectorAll('.effects__radio');
-const imgPreview = document.querySelector('.img-upload__preview img'); //фотография большого кота
-
-const removeEffects = () => {
-  imgPreview.classList.remove('effects__preview--sepia');
-  imgPreview.classList.remove('effects__preview--chrome');
-  imgPreview.classList.remove('effects__preview--phobos');
-  imgPreview.classList.remove('effects__preview--marvin');
-  imgPreview.classList.remove('effects__preview--heat');
-};
+const imgPreview = document.querySelector('.img-upload__preview img');
+const hashtagInput = editImage.querySelector('.text__hashtags');
+const commentInput = document.querySelector('.text__description');
 
 let currentImage;
+let isHashtagInputFocused = false; //задаем изначальное состояние
+let isCommentInputFocused = false;
 
-//Функция для применения эффекта на фото большого кота
-const addRadiokHandler = function (radio) {
-  radio.addEventListener('change', function () {
-    removeEffects();
-
-    if (radio.id === 'effect-chrome') {
-      imgPreview.classList.add('effects__preview--chrome');
-    }
-
-    if (radio.id === 'effect-sepia') {
-      imgPreview.classList.add('effects__preview--sepia');
-    }
-
-    if (radio.id === 'effect-marvin') {
-      imgPreview.classList.add('effects__preview--marvin');
-    }
-
-    if (radio.id === 'effect-phobos') {
-      imgPreview.classList.add('effects__preview--phobos');
-    }
-
-    if (radio.id === 'effect-heat') {
-      imgPreview.classList.add('effects__preview--heat');
-    }
-  });
+const showModal = (doShow = true) => {
+  if (doShow) {
+    editImage.classList.remove('hidden');
+    document.querySelector('body').classList.add('modal-open');
+    document.addEventListener('keydown', onEscapeKeyDown);
+  } else {
+    editImage.classList.add('hidden');
+    document.querySelector('body').classList.remove('modal-open');
+  }
 };
 
-//Функция закрытия модалки
-const closeModal = () => {
-  startStateInput.value = null;
-  editImage.classList.add('hidden');
-  document.querySelector('body').classList.remove('modal-open');
+const renderPreviewImage = (evt) => {
+  currentImage = evt.target.files[0];
+  imgPreview.src = URL.createObjectURL(currentImage);
 };
 
 //Функция открытия модалки
 const openModal = (evt) => {
-  currentImage = evt.target.files[0];
-  if (currentImage) {
-    // потому что пользователь может нажать и "Отмена"
-    editImage.classList.remove('hidden');
-    document.querySelector('body').classList.add('modal-open');
-    // imgPreview.src = URL.createObjectURL(currentImage);
-  }
+  showModal();
+  renderPreviewImage(evt);
 };
-// Функция для валидации формы-----------Не сделано----------------
 
-const chooseEffectForm = document.querySelector('.form');
-const pristine = new Pristine();
-const hashtag = /^#[a-zа-яё0-9]{1,19}$/i;
+function onEscapeKeyDown(evt) {
+  if (isEscapeKey(evt)) {
+    if (!isHashtagInputFocused && !isCommentInputFocused) {
+      closeModal();
+    }
+  }
+}
+
+//Функция закрытия модалки
+function closeModal() {
+  startStateInput.value = null;
+  showModal(false);
+  document.removeEventListener('keydown', onEscapeKeyDown);
+}
 
 //Функция с обработчиками
 const prepareLoadImageForm = () => {
+  hashtagInput.addEventListener('focus', () => {
+    isHashtagInputFocused = true;
+  });
+  hashtagInput.addEventListener('blur', () => {
+    isHashtagInputFocused = false;
+  });
+  commentInput.addEventListener('focus', () => {
+    isCommentInputFocused = true;
+  });
+  commentInput.addEventListener('blur', () => {
+    isCommentInputFocused = false;
+  });
   formInput.addEventListener('change', openModal);
   closeForm.addEventListener('click', closeModal);
-
-  for (let i = 0; i < effectRadios.length; i++) {
-    addRadiokHandler(effectRadios[i]);
-  }
+  prepareImgUploadPristine(imgUploadForm);
 };
 
 export { prepareLoadImageForm };
