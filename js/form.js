@@ -1,7 +1,7 @@
-//Модуль, отвечающий за работу с формой
+//МОДУЛЬ ДЛЯ РАБОТЫ С ФОРМОЙ
 import { prepareImgUploadPristine } from './validation.js';
 import { isEscapeKey } from './utils.js';
-import './effects.js';
+import { resetScale } from './effects.js';
 
 const imgUploadForm = document.querySelector('.img-upload__form');
 const editImage = document.querySelector('.img-upload__overlay');
@@ -36,6 +36,7 @@ const renderPreviewImage = (evt) => {
 const openModal = (evt) => {
   showModal();
   renderPreviewImage(evt);
+  resetScale();
 };
 
 function onEscapeKeyDown(evt) {
