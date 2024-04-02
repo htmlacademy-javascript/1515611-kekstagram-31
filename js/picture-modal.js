@@ -1,4 +1,4 @@
-//Модуль, отвечающий за модальное окно
+//МОДУЛЬ ДЛЯ МОДАЛЬНОГО ОКНА
 import './thumbnails.js';
 import { isEscapeKey } from './utils.js';
 
