@@ -33,9 +33,13 @@ const validateComment = (str) => {
   return str === '' || str.length <= 140;
 };
 
+let pristine;
+
+const pristineReset = () => pristine.reset();
+
 //Функция валидации для Pristine
 const prepareImgUploadPristine = (imgUploadForm) => {
-  const pristine = new Pristine(imgUploadForm, {
+  pristine = new Pristine(imgUploadForm, {
     classTo: 'img-upload__field-wrapper',
     errorTextParent: 'img-upload__field-wrapper',
     errorTextTag: 'div',
@@ -51,12 +55,26 @@ const prepareImgUploadPristine = (imgUploadForm) => {
     validateComment,
     'Комментарий должен быть не длиннее 140 символов'
   );
-  imgUploadForm.addEventListener('submit', (evt) => {
-    const isValid = pristine.validate();
-    if (!isValid) {
+
+  const setUserFormSubmit = (onSuccess) => {
+    imgUploadForm.addEventListener('submit', (evt) => {
       evt.preventDefault();
-    }
-  });
+      const isValid = pristine.validate();
+      if (!isValid) {
+        const formData = new FormData(evt.target);
+        fetch('https://31.javascript.htmlacademy.pro/kekstagram', {
+          method: 'POST',
+          body: formData,
+        }).then((response) => {
+          if (response.ok) {
+            onSuccess();
+          } else {
+            showAlert('Не удалось отправить форму');
+          }
+        });
+      }
+    });
+  };
 };
 
-export { prepareImgUploadPristine };
+export { prepareImgUploadPristine, pristineReset };

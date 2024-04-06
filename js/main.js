@@ -1,7 +1,14 @@
-import { createArray } from './data.js';
 import { renderPhotos } from './thumbnails.js';
 import { prepareLoadImageForm } from './form.js';
+import { getData } from './api.js';
+import { renderError } from './utils.js';
 
-const photos = createArray();
-renderPhotos(photos);
+getData(
+  (data) => {
+    renderPhotos(data);
+  },
+  () => {
+    renderError();
+  }
+);
 prepareLoadImageForm();
