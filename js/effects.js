@@ -2,31 +2,80 @@
 
 const imgPreview = document.querySelector('.img-upload__preview img');
 const radioList = document.querySelector('.effects__list');
-
-const removeEffects = () => {
-  imgPreview.classList.remove('effects__preview--sepia');
-  imgPreview.classList.remove('effects__preview--chrome');
-  imgPreview.classList.remove('effects__preview--phobos');
-  imgPreview.classList.remove('effects__preview--marvin');
-  imgPreview.classList.remove('effects__preview--heat');
-};
-
-//Функция для применения эффекта фильтра на фото большого кота
-
-radioList.addEventListener('change', function (evt) {
-  removeEffects();
-  if (evt.target.value === 'none') {
-    return;
-  }
-  imgPreview.classList.add(`effects__preview--${evt.target.value}`);
-});
-
-//Слайдер
-
 const sliderElement = document.querySelector('.effect-level__slider');
 const scaleInput = document.querySelector('.scale__control--value');
 const controlMinus = document.querySelector('.scale__control--smaller');
 const controlPlus = document.querySelector('.scale__control--bigger');
+const effectValue = document.querySelector('.effect-level__value');
+
+const effects = {
+  // <radio value='chrome' ... />
+  chrome: {
+    filter: 'grayscale',
+    min: 0,
+    max: 1,
+    step: 0.1,
+    measure: '',
+  },
+  sepia: {
+    filter: 'sepia',
+    min: 0,
+    max: 1,
+    step: 0.1,
+    measure: '',
+  },
+  marvin: {
+    filter: 'invert',
+    min: 0,
+    max: 100,
+    step: 1,
+    measure: '%',
+  },
+  phobos: {
+    filter: 'blur',
+    min: 0,
+    max: 3,
+    step: 0.1,
+    measure: 'px',
+  },
+  heat: {
+    filter: 'brightness',
+    min: 1,
+    max: 3,
+    step: 0.1,
+    measure: '',
+  },
+};
+
+const removeEffect = () => {
+  imgPreview.removeAttribute('style');
+};
+
+let currentSelectedEffect = 'none';
+
+//Функция для применения эффекта фильтра на фото большого кота
+radioList.addEventListener('change', function (evt) {
+  const effectName = evt.target.value;
+  currentSelectedEffect = effectName;
+  removeEffect();
+  if (effectName === 'none') {
+    return;
+  }
+
+  //Получаем настройки текущего эффекта
+  const effectOptions = effects[effectName];
+  //Обновляем максимальное и максимальное значение слайдера
+  sliderElement.noUiSlider.updateOptions({
+    range: {
+      min: effectOptions.min,
+      max: effectOptions.max,
+    },
+    step: effectOptions.step,
+  });
+  sliderElement.noUiSlider.set(effectOptions.max);
+
+  imgPreview.style.filter = `${effectOptions.filter}(${effectOptions.max}${effectOptions.measure})`;
+});
 
 noUiSlider.create(sliderElement, {
   range: {
@@ -38,8 +87,16 @@ noUiSlider.create(sliderElement, {
   connect: 'lower',
 });
 
-sliderElement.noUiSlider.on('update', () => {});
+sliderElement.noUiSlider.on('update', () => {
+  if (currentSelectedEffect !== 'none') {
+    const effectOptions = effects[currentSelectedEffect];
+    const value = sliderElement.noUiSlider.get();
+    effectValue.value = value;
+    imgPreview.style.filter = `${effectOptions.filter}(${value}${effectOptions.measure})`;
+  }
+});
 
+//Изменение масштаба картинки-----------------------------------------
 let imgScale = 100;
 //Нажатие на кнопку "минус"
 controlMinus.addEventListener('click', () => {

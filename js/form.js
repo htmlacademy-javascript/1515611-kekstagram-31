@@ -1,5 +1,5 @@
 //МОДУЛЬ ДЛЯ РАБОТЫ С ФОРМОЙ
-import { prepareImgUploadPristine } from './validation.js';
+import { prepareImgUploadPristine, pristineReset } from './validation.js';
 import { isEscapeKey } from './utils.js';
 import { resetScale } from './effects.js';
 
@@ -51,6 +51,7 @@ function onEscapeKeyDown(evt) {
 function closeModal() {
   startStateInput.value = null;
   showModal(false);
+  pristineReset();
   document.removeEventListener('keydown', onEscapeKeyDown);
 }
 
@@ -73,4 +74,4 @@ const prepareLoadImageForm = () => {
   prepareImgUploadPristine(imgUploadForm);
 };
 
-export { prepareLoadImageForm };
+export { prepareLoadImageForm, closeModal };
