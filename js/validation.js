@@ -1,4 +1,6 @@
 // МОДУЛЬ ДЛЯ ВАЛИДАЦИИ ФОРМЫ
+import { closeModal } from './form.js';
+import { showSuccessPopup, showErrorPopup } from './popup.js';
 
 const hashtagReg = /^#[a-zа-яё0-9\s]{1,19}$/i;
 const findDuplicates = (arr) => {
@@ -55,26 +57,33 @@ const prepareImgUploadPristine = (imgUploadForm) => {
     validateComment,
     'Комментарий должен быть не длиннее 140 символов'
   );
-
-  const setUserFormSubmit = (onSuccess) => {
-    imgUploadForm.addEventListener('submit', (evt) => {
-      evt.preventDefault();
-      const isValid = pristine.validate();
-      if (!isValid) {
-        const formData = new FormData(evt.target);
-        fetch('https://31.javascript.htmlacademy.pro/kekstagram', {
-          method: 'POST',
-          body: formData,
-        }).then((response) => {
-          if (response.ok) {
-            onSuccess();
-          } else {
-            showAlert('Не удалось отправить форму');
-          }
-        });
-      }
-    });
-  };
+  const buttonSubmit = document.querySelector('.img-upload__submit');
+  const uploadForm = document.querySelector('.img-upload__form');
+  // const setUserFormSubmit = (onSuccess) => {
+  imgUploadForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    const isValid = pristine.validate();
+    if (isValid) {
+      const formData = new FormData(evt.target);
+      fetch('https://31.javascript.htmlacademy.pro/kekstagram', {
+        method: 'POST',
+        body: formData,
+      }).then((response) => {
+        if (response.ok) {
+          // onSuccess();
+          buttonSubmit.classList.add('disabled');
+          closeModal();
+          uploadForm.reset();
+          showSuccessPopup();
+        } else {
+          buttonSubmit.classList.add('disabled');
+          closeModal();
+          showErrorPopup();
+        }
+      });
+    }
+  });
+  // };
 };
 
 export { prepareImgUploadPristine, pristineReset };

@@ -74,4 +74,4 @@ const prepareLoadImageForm = () => {
   prepareImgUploadPristine(imgUploadForm);
 };
 
-export { prepareLoadImageForm };
+export { prepareLoadImageForm, closeModal };
