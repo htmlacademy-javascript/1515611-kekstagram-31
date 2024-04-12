@@ -3,6 +3,8 @@ import { prepareImgUploadPristine, pristineReset } from './validation.js';
 import { isEscapeKey } from './utils.js';
 import { resetScale } from './effects.js';
 
+const FILE_TYPES = ['jpg', 'jpeg', 'png'];
+
 const imgUploadForm = document.querySelector('.img-upload__form');
 const editImage = document.querySelector('.img-upload__overlay');
 const formInput = document.querySelector('.img-upload__input');
@@ -29,8 +31,13 @@ const showModal = (doShow = true) => {
 
 //Загрузка фотографии с компа
 const renderPreviewImage = (evt) => {
-  currentImage = evt.target.files[0];
-  imgPreview.src = URL.createObjectURL(currentImage);
+  const file = evt.target.files[0];
+  const fileName = file.name.toLowerCase();
+  const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
+  if (matches) {
+    currentImage = file;
+    imgPreview.src = URL.createObjectURL(currentImage);
+  }
 };
 
 //Функция открытия модалки
