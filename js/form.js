@@ -1,7 +1,7 @@
 //МОДУЛЬ ДЛЯ РАБОТЫ С ФОРМОЙ
 import { prepareImgUploadPristine, pristineReset } from './validation.js';
 import { isEscapeKey } from './utils.js';
-import { resetScale } from './effects.js';
+import { resetScale, removeEffect, effectLevel } from './effects.js';
 
 const FILE_TYPES = ['jpg', 'jpeg', 'png'];
 
@@ -23,6 +23,8 @@ const showModal = (doShow = true) => {
     editImage.classList.remove('hidden');
     document.querySelector('body').classList.add('modal-open');
     document.addEventListener('keydown', onEscapeKeyDown);
+    removeEffect();
+    effectLevel.classList.add('visually-hidden');
   } else {
     editImage.classList.add('hidden');
     document.querySelector('body').classList.remove('modal-open');

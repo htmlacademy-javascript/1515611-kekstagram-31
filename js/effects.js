@@ -1,5 +1,6 @@
 //МОДУЛЬ ДЛЯ ЭФФЕКТОВ ФИЛЬТРА И СЛАЙДЕРА
 
+const effectLevel = document.querySelector('.img-upload__effect-level');
 const imgPreview = document.querySelector('.img-upload__preview img');
 const radioList = document.querySelector('.effects__list');
 const sliderElement = document.querySelector('.effect-level__slider');
@@ -9,7 +10,6 @@ const controlPlus = document.querySelector('.scale__control--bigger');
 const effectValue = document.querySelector('.effect-level__value');
 
 const effects = {
-  // <radio value='chrome' ... />
   chrome: {
     filter: 'grayscale',
     min: 0,
@@ -48,7 +48,9 @@ const effects = {
 };
 
 const removeEffect = () => {
+  console.log('remove efect');
   imgPreview.removeAttribute('style');
+  effectLevel.classList.add('visually-hidden');
 };
 
 let currentSelectedEffect = 'none';
@@ -75,6 +77,7 @@ radioList.addEventListener('change', function (evt) {
   sliderElement.noUiSlider.set(effectOptions.max);
 
   imgPreview.style.filter = `${effectOptions.filter}(${effectOptions.max}${effectOptions.measure})`;
+  effectLevel.classList.remove('visually-hidden');
 });
 
 noUiSlider.create(sliderElement, {
@@ -118,4 +121,4 @@ function resetScale() {
   scaleInput.value = '100%';
 }
 
-export { resetScale };
+export { resetScale, removeEffect, effectLevel };
