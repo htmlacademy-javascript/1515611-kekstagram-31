@@ -59,7 +59,7 @@ const prepareImgUploadPristine = (imgUploadForm) => {
   );
   const buttonSubmit = document.querySelector('.img-upload__submit');
   const uploadForm = document.querySelector('.img-upload__form');
-  // const setUserFormSubmit = (onSuccess) => {
+
   imgUploadForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
     const isValid = pristine.validate();
@@ -70,7 +70,6 @@ const prepareImgUploadPristine = (imgUploadForm) => {
         body: formData,
       }).then((response) => {
         if (response.ok) {
-          // onSuccess();
           buttonSubmit.classList.add('disabled');
           closeModal();
           uploadForm.reset();

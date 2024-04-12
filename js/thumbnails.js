@@ -9,8 +9,14 @@ const cardTemplate = document
   .querySelector('#picture')
   .content.querySelector('.picture');
 
+let cards = [];
 //Функция отрисовки фотографий
 const renderPhotos = function (data) {
+  cards.forEach((card) => {
+    pictures.removeChild(card);
+  });
+  cards = [];
+
   const cardListFragment = document.createDocumentFragment();
   data.forEach(({ url, description, comments, likes }) => {
     const cardElement = cardTemplate.cloneNode(true);
@@ -23,6 +29,7 @@ const renderPhotos = function (data) {
     cardElement.addEventListener('click', () => {
       openModal(url, description, comments, likes);
     });
+    cards.push(cardElement);
   });
   pictures.appendChild(cardListFragment);
 };
