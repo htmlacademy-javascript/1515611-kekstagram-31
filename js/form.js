@@ -27,6 +27,7 @@ const showModal = (doShow = true) => {
   }
 };
 
+//Загрузка фотографии с компа
 const renderPreviewImage = (evt) => {
   currentImage = evt.target.files[0];
   imgPreview.src = URL.createObjectURL(currentImage);
