@@ -23,6 +23,11 @@ const showSuccessPopup = () => {
       closeSuccessPopup();
     }
   });
+  successPopupElement.addEventListener('click', (evt) => {
+    if (evt.target === successPopupElement) {
+      closeSuccessPopup();
+    }
+  });
   document.body.append(successPopupElement);
 };
 

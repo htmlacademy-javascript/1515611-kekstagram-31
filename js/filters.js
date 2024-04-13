@@ -2,11 +2,12 @@ import { renderPhotos } from './thumbnails';
 import { getRandomArrayElement, debounce } from './utils';
 import { getData } from './api';
 
+const imgFilters = document.querySelector('.img-filters');
 const defaultButton = document.querySelector('#filter-default');
 const randomPhotosButton = document.querySelector('#filter-random');
 const discussedPhotosButton = document.querySelector('#filter-discussed');
 
-const RENDER_DELAY = 1000;
+const RENDER_DELAY = 500;
 
 const renderDebouncedPhotos = debounce((selectedFilter) => {
   if (selectedFilter === 'default') {
@@ -79,3 +80,9 @@ discussedPhotosButton.addEventListener('click', () => {
   addActiveClass(discussedPhotosButton);
   renderDebouncedPhotos('discussed');
 });
+
+function showFilters() {
+  imgFilters.classList.remove('img-filters--inactive');
+}
+
+export { showFilters };

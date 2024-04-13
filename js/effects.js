@@ -93,8 +93,12 @@ noUiSlider.create(sliderElement, {
 sliderElement.noUiSlider.on('update', () => {
   if (currentSelectedEffect !== 'none') {
     const effectOptions = effects[currentSelectedEffect];
-    const value = sliderElement.noUiSlider.get();
-    effectValue.value = value;
+    const value = Number(sliderElement.noUiSlider.get());
+    if (value < 1) {
+      effectValue.value = Number(value).toFixed(1);
+    } else {
+      effectValue.value = value;
+    }
     imgPreview.style.filter = `${effectOptions.filter}(${value}${effectOptions.measure})`;
   }
 });

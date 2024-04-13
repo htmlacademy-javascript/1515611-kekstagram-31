@@ -25,6 +25,7 @@ const showModal = (doShow = true) => {
     document.addEventListener('keydown', onEscapeKeyDown);
     removeEffect();
     effectLevel.classList.add('visually-hidden');
+    document.querySelector('.img-upload__submit').removeAttribute('disabled');
   } else {
     editImage.classList.add('hidden');
     document.querySelector('body').classList.remove('modal-open');

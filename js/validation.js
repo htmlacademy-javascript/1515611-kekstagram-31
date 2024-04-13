@@ -15,7 +15,7 @@ const validateHashtags = (str) => {
   if (str.trim() === '') {
     return true;
   }
-  const hashtagsArray = str.split(' ');
+  const hashtagsArray = str.split(' ').filter((str) => str !== '');
   const isLessThan5 = hashtagsArray.length <= 5;
   if (!isLessThan5) {
     return false;
@@ -37,7 +37,9 @@ const validateComment = (str) => {
 
 let pristine;
 
-const pristineReset = () => pristine.reset();
+const pristineReset = () => {
+  pristine.reset();
+};
 
 //Функция валидации для Pristine
 const prepareImgUploadPristine = (imgUploadForm) => {
@@ -65,24 +67,24 @@ const prepareImgUploadPristine = (imgUploadForm) => {
     const isValid = pristine.validate();
     if (isValid) {
       const formData = new FormData(evt.target);
-      fetch('https://31.javascript.htmlacademy.pro/kekstagram', {
+      buttonSubmit.setAttribute('disabled', '');
+      fetch('https://31.javascript.htmlacademy.pro/kekstagram/', {
         method: 'POST',
         body: formData,
       }).then((response) => {
         if (response.ok) {
-          buttonSubmit.classList.add('disabled');
           closeModal();
+          buttonSubmit.removeAttribute('disabled');
           uploadForm.reset();
           showSuccessPopup();
         } else {
-          buttonSubmit.classList.add('disabled');
+          buttonSubmit.removeAttribute('disabled');
           closeModal();
           showErrorPopup();
         }
       });
     }
   });
-  // };
 };
 
 export { prepareImgUploadPristine, pristineReset };
