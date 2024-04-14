@@ -1,4 +1,3 @@
-//МОДУЛЬ ДЛЯ РАБОТЫ С ФОРМОЙ
 import { prepareImgUploadPristine, pristineReset } from './validation.js';
 import { isEscapeKey } from './utils.js';
 import { resetScale, removeEffect, effectLevel } from './effects.js';
@@ -13,6 +12,7 @@ const startStateInput = document.querySelector('.img-upload__input');
 const imgPreview = document.querySelector('.img-upload__preview img');
 const hashtagInput = editImage.querySelector('.text__hashtags');
 const commentInput = document.querySelector('.text__description');
+const effectsThumbs = document.querySelectorAll('.effects__preview');
 
 let currentImage;
 let isHashtagInputFocused = false; //задаем изначальное состояние
@@ -32,7 +32,14 @@ const showModal = (doShow = true) => {
   }
 };
 
-//Загрузка фотографии с компа
+const removeEscListener = () => {
+  document.removeEventListener('keydown', onEscapeKeyDown);
+};
+
+const addEscListener = () => {
+  document.addEventListener('keydown', onEscapeKeyDown);
+};
+
 const renderPreviewImage = (evt) => {
   const file = evt.target.files[0];
   const fileName = file.name.toLowerCase();
@@ -41,9 +48,11 @@ const renderPreviewImage = (evt) => {
     currentImage = file;
     imgPreview.src = URL.createObjectURL(currentImage);
   }
+  effectsThumbs.forEach((item) => {
+    item.style.backgroundImage = `url(${URL.createObjectURL(currentImage)})`;
+  });
 };
 
-//Функция открытия модалки
 const openModal = (evt) => {
   showModal();
   renderPreviewImage(evt);
@@ -58,15 +67,14 @@ function onEscapeKeyDown(evt) {
   }
 }
 
-//Функция закрытия модалки
 function closeModal() {
   startStateInput.value = null;
   showModal(false);
   pristineReset();
+  imgUploadForm.reset();
   document.removeEventListener('keydown', onEscapeKeyDown);
 }
 
-//Функция с обработчиками
 const prepareLoadImageForm = () => {
   hashtagInput.addEventListener('focus', () => {
     isHashtagInputFocused = true;
@@ -85,4 +93,4 @@ const prepareLoadImageForm = () => {
   prepareImgUploadPristine(imgUploadForm);
 };
 
-export { prepareLoadImageForm, closeModal };
+export { prepareLoadImageForm, closeModal, removeEscListener, addEscListener };

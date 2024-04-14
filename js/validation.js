@@ -1,21 +1,20 @@
-// МОДУЛЬ ДЛЯ ВАЛИДАЦИИ ФОРМЫ
-import { closeModal } from './form.js';
+import { closeModal, removeEscListener } from './form.js';
 import { showSuccessPopup, showErrorPopup } from './popup.js';
 
 const hashtagReg = /^#[a-zа-яё0-9\s]{1,19}$/i;
-const findDuplicates = (arr) => {
-  return arr.filter(
+const findDuplicates = (arr) =>
+  arr.filter(
     (currentValue, currentIndex) => arr.indexOf(currentValue) !== currentIndex
   );
-};
 
-//Функция для выполнения всех условий валидации хэштэгов
 const validateHashtags = (str) => {
-  // Допущение строки, состоящего из одних пробелов
   if (str.trim() === '') {
     return true;
   }
-  const hashtagsArray = str.split(' ').filter((str) => str !== '');
+  const hashtagsArray = str
+    .toLowerCase()
+    .split(' ')
+    .filter((hashtag) => hashtag !== '');
   const isLessThan5 = hashtagsArray.length <= 5;
   if (!isLessThan5) {
     return false;
@@ -24,16 +23,13 @@ const validateHashtags = (str) => {
   if (!isNoRepeats) {
     return false;
   }
-  const isAllHashtagsMatchRegexp = hashtagsArray.every((hashtag) => {
-    return hashtagReg.test(hashtag);
-  });
+  const isAllHashtagsMatchRegexp = hashtagsArray.every((hashtag) =>
+    hashtagReg.test(hashtag)
+  );
   return isAllHashtagsMatchRegexp;
 };
 
-//Функция для валидации комментария
-const validateComment = (str) => {
-  return str === '' || str.length <= 140;
-};
+const validateComment = (str) => str === '' || str.length <= 140;
 
 let pristine;
 
@@ -41,7 +37,6 @@ const pristineReset = () => {
   pristine.reset();
 };
 
-//Функция валидации для Pristine
 const prepareImgUploadPristine = (imgUploadForm) => {
   pristine = new Pristine(imgUploadForm, {
     classTo: 'img-upload__field-wrapper',
@@ -79,8 +74,8 @@ const prepareImgUploadPristine = (imgUploadForm) => {
           showSuccessPopup();
         } else {
           buttonSubmit.removeAttribute('disabled');
-          closeModal();
           showErrorPopup();
+          removeEscListener();
         }
       });
     }
