@@ -1,5 +1,4 @@
-//МОДУЛЬ ДЛЯ ЭФФЕКТОВ ФИЛЬТРА И СЛАЙДЕРА
-
+const effectLevel = document.querySelector('.img-upload__effect-level');
 const imgPreview = document.querySelector('.img-upload__preview img');
 const radioList = document.querySelector('.effects__list');
 const sliderElement = document.querySelector('.effect-level__slider');
@@ -9,7 +8,6 @@ const controlPlus = document.querySelector('.scale__control--bigger');
 const effectValue = document.querySelector('.effect-level__value');
 
 const effects = {
-  // <radio value='chrome' ... />
   chrome: {
     filter: 'grayscale',
     min: 0,
@@ -49,12 +47,12 @@ const effects = {
 
 const removeEffect = () => {
   imgPreview.removeAttribute('style');
+  effectLevel.classList.add('visually-hidden');
 };
 
 let currentSelectedEffect = 'none';
 
-//Функция для применения эффекта фильтра на фото большого кота
-radioList.addEventListener('change', function (evt) {
+radioList.addEventListener('change', (evt) => {
   const effectName = evt.target.value;
   currentSelectedEffect = effectName;
   removeEffect();
@@ -62,9 +60,8 @@ radioList.addEventListener('change', function (evt) {
     return;
   }
 
-  //Получаем настройки текущего эффекта
   const effectOptions = effects[effectName];
-  //Обновляем максимальное и максимальное значение слайдера
+
   sliderElement.noUiSlider.updateOptions({
     range: {
       min: effectOptions.min,
@@ -73,8 +70,8 @@ radioList.addEventListener('change', function (evt) {
     step: effectOptions.step,
   });
   sliderElement.noUiSlider.set(effectOptions.max);
-
   imgPreview.style.filter = `${effectOptions.filter}(${effectOptions.max}${effectOptions.measure})`;
+  effectLevel.classList.remove('visually-hidden');
 });
 
 noUiSlider.create(sliderElement, {
@@ -90,32 +87,33 @@ noUiSlider.create(sliderElement, {
 sliderElement.noUiSlider.on('update', () => {
   if (currentSelectedEffect !== 'none') {
     const effectOptions = effects[currentSelectedEffect];
-    const value = sliderElement.noUiSlider.get();
-    effectValue.value = value;
+    const value = Number(sliderElement.noUiSlider.get());
+    if (value < 1) {
+      effectValue.value = Number(value).toFixed(1);
+    } else {
+      effectValue.value = value;
+    }
     imgPreview.style.filter = `${effectOptions.filter}(${value}${effectOptions.measure})`;
   }
 });
 
-//Изменение масштаба картинки-----------------------------------------
 let imgScale = 100;
-//Нажатие на кнопку "минус"
 controlMinus.addEventListener('click', () => {
   imgScale = Math.max(25, imgScale - 25);
-  scaleInput.value = imgScale + '%';
+  scaleInput.value = `${imgScale}%`;
   imgPreview.style.transform = `scale(${imgScale / 100})`;
 });
 
-//Нажатие на кнопку "плюс"
 controlPlus.addEventListener('click', () => {
   imgScale = Math.min(100, imgScale + 25);
-  scaleInput.value = imgScale + '%';
+  scaleInput.value = `${imgScale}%`;
   imgPreview.style.transform = `scale(${imgScale / 100})`;
 });
 
 function resetScale() {
   imgScale = 100;
-  imgPreview.style.transform = `scale(1)`;
+  imgPreview.style.transform = 'scale(1)';
   scaleInput.value = '100%';
 }
 
-export { resetScale };
+export { resetScale, removeEffect, effectLevel };

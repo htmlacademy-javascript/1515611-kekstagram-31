@@ -1,15 +1,14 @@
-//МОДУЛЬ ДЛЯ ПОКАЗА СООБЩЕНИЙ ФОРМЫ
 import { isEscapeKey } from './utils.js';
-
-//Показ окна об успешной отправке
-const successPopupTemplate = document
-  .querySelector('#success')
-  .content.querySelector('.success');
+import { addEscListener } from './form.js';
 
 const closeSuccessPopup = () => {
   document.querySelector('.success').remove();
   document.removeEventListener('keydown', isEscapeKey);
 };
+
+const successPopupTemplate = document
+  .querySelector('#success')
+  .content.querySelector('.success');
 
 const showSuccessPopup = () => {
   const successPopupElement = successPopupTemplate.cloneNode(true);
@@ -23,18 +22,29 @@ const showSuccessPopup = () => {
       closeSuccessPopup();
     }
   });
+  successPopupElement.addEventListener('click', (evt) => {
+    if (evt.target === successPopupElement) {
+      closeSuccessPopup();
+    }
+  });
   document.body.append(successPopupElement);
 };
-
-//Показ сообщения об ошибке
 
 const errorPopupTemplate = document
   .querySelector('#error')
   .content.querySelector('.error');
-const closeErrorPopup = () => {
-  document.querySelector('.error').remove();
-  document.removeEventListener('keydown', isEscapeKey);
+
+const escHandler = (e) => {
+  if (isEscapeKey(e)) {
+    closeErrorPopup();
+  }
 };
+
+function closeErrorPopup() {
+  document.querySelector('.error').remove();
+  document.removeEventListener('keydown', escHandler);
+  addEscListener();
+}
 
 const showErrorPopup = () => {
   const errorPopupElement = errorPopupTemplate.cloneNode(true);
@@ -43,11 +53,13 @@ const showErrorPopup = () => {
     .addEventListener('click', () => {
       closeErrorPopup();
     });
-  document.addEventListener('keydown', (e) => {
-    if (isEscapeKey(e)) {
+
+  errorPopupElement.addEventListener('click', (e) => {
+    if (e.target.classList.contains('error')) {
       closeErrorPopup();
     }
   });
+  document.addEventListener('keydown', escHandler);
   document.body.append(errorPopupElement);
 };
 export { showSuccessPopup, showErrorPopup };

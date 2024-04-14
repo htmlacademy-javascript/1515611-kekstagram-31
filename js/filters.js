@@ -1,12 +1,14 @@
 import { renderPhotos } from './thumbnails';
 import { getRandomArrayElement, debounce } from './utils';
 import { getData } from './api';
+import { renderError } from './utils.js';
 
+const imgFilters = document.querySelector('.img-filters');
 const defaultButton = document.querySelector('#filter-default');
 const randomPhotosButton = document.querySelector('#filter-random');
 const discussedPhotosButton = document.querySelector('#filter-discussed');
 
-const RENDER_DELAY = 1000;
+const RENDER_DELAY = 500;
 
 const renderDebouncedPhotos = debounce((selectedFilter) => {
   if (selectedFilter === 'default') {
@@ -25,9 +27,9 @@ const renderDebouncedPhotos = debounce((selectedFilter) => {
         const uniquePhotos = [];
         while (uniquePhotos.length < 10) {
           const randomElement = getRandomArrayElement(data);
-          const allPhotosUnique = uniquePhotos.every((photo) => {
-            return photo.url !== randomElement.url;
-          });
+          const allPhotosUnique = uniquePhotos.every(
+            (photo) => photo.url !== randomElement.url
+          );
           if (allPhotosUnique) {
             uniquePhotos.push(randomElement);
           }
@@ -42,9 +44,9 @@ const renderDebouncedPhotos = debounce((selectedFilter) => {
   if (selectedFilter === 'discussed') {
     getData(
       (data) => {
-        const array = data.sort((a, b) => {
-          return b.comments.length - a.comments.length;
-        });
+        const array = data.sort(
+          (a, b) => b.comments.length - a.comments.length
+        );
         renderPhotos(array);
       },
       () => {
@@ -79,3 +81,9 @@ discussedPhotosButton.addEventListener('click', () => {
   addActiveClass(discussedPhotosButton);
   renderDebouncedPhotos('discussed');
 });
+
+function showFilters() {
+  imgFilters.classList.remove('img-filters--inactive');
+}
+
+export { showFilters };
